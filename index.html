@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+  <meta content="utf-8" http-equiv="encoding">
+  <link type="text/css" rel="stylesheet" href="./materialize/css/materialize.min.css" media="screen,projection"/>
+
+
+</head>
+<body >
+  <style>
+
+  p{
+    line-height: 5px;
+  }
+  .row{
+    height:15px;
+  }
+
+  .textcolor{
+    color: #6d4c41;
+  }
+
+
+  </style>
+
+  <div class="nav">
+    <div class="nav-wrapper row">
+      <div class="col s3">
+
+      </div>
+
+
+    </div>
+  </div>
+  <div class="">
+    <div class="row">
+      <div class="input-field col s8">
+           <input id="dizin" type="text" class="validate">
+           <label for="dizin">Dosya ismi</label>
+           <button class="btn" onclick="goster()"> Göster</button>
+           <button class="btn" onclick="gerial()"> Geri al</button>
+           <button class="btn" onclick="temizle()"> Temizle</button>
+           <button class="btn" onclick="cikart()"> Çıkart</button>
+      </div>
+      <div class="col s4">
+
+          <div class="input-field col s6">
+          <input id="className" type="text" class="validate">
+          <label for="className">Class Name</label>
+         </div>
+          <div class="input-field col s6">
+          <input id="classId" type="text" class="validate">
+          <label for="classId">Class Id</label>
+         </div>
+
+
+
+      </div>
+      <div class="col s12">
+        <div class="row">
+          <div class="col s2">
+              <p id="xmins" class="textcolor">xmins:</p>
+          </div>
+          <div id="xminsV" class="col s10">
+
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col s2">
+              <p id="ymins" class="textcolor">ymins:</p>
+          </div>
+          <div id="yminsV" class="col s10">
+
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col s2">
+              <p id="xmaxs" class="textcolor">xmaxs:</p>
+          </div>
+          <div id="xmaxsV" class="col s10">
+
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col s2">
+              <p id="ymaxs" class="textcolor">ymaxs:</p>
+          </div>
+          <div id="ymaxsV" class="col s10">
+
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col s2">
+              <p id="className" class="textcolor">ClassName:</p>
+          </div>
+          <div id="classNameV" class="col s10">
+
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col s2">
+              <p id="classId" class="textcolor">ClassId:</p>
+          </div>
+          <div id="classIdV" class="col s10">
+
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+    <div class="row">
+
+      <div class="col s12">
+        <img  id="resim"  />
+      </div>
+
+    </div>
+  </div>
+
+  <script type="text/javascript" src="./materialize/js/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="./materialize/js/materialize.min.js"></script>
+  <script>
+
+  $(document).ready(function() {
+    $('select').material_select();
+  });
+
+  document.addEventListener('click', printMousePos, true);
+
+  var xmins =[]
+  var xmaxs =[]
+
+  var ymins =[]
+  var ymaxs =[]
+
+  var className =[]
+  var classId =[]
+
+
+
+  var sayac=0;
+  var resimm = document.getElementById("resim")
+
+  function goster(){
+
+     var myImage = document.getElementById("resim")
+     var dizin= document.getElementById("dizin").value
+     myImage.src=dizin
+  }
+
+  function temizle(){
+
+   var resim = document.getElementById("resim")
+   resim.src=""
+   document.getElementById("xminsV").innerHTML = ""
+   document.getElementById("yminsV").innerHTML = ""
+   document.getElementById("xmaxsV").innerHTML = ""
+   document.getElementById("ymaxsV").innerHTML = ""
+   document.getElementById("classNameV").innerHTML = ""
+   document.getElementById("classIdV").innerHTML = ""
+
+   sayac=0
+
+   xmins = []
+   ymins = []
+   xmaxs = []
+   ymaxs = []
+   className =[]
+   classId =[]
+
+
+
+  }
+
+  function gerial(){
+
+   if(sayac ==0) {
+     xmaxs.pop()
+     ymaxs.pop()
+     sayac++
+   }else {
+     xmins.pop()
+     ymins.pop()
+     className.pop()
+     classId.pop()
+     sayac=0
+   }
+
+    document.getElementById("xminsV").innerHTML = "["+xmins+"]"
+    document.getElementById("yminsV").innerHTML = "["+ymins+"]"
+    document.getElementById("xmaxsV").innerHTML = "["+xmaxs+"]"
+    document.getElementById("ymaxsV").innerHTML = "["+ymaxs+"]"
+    document.getElementById("classNameV").innerHTML = "["+className+"]"
+    document.getElementById("classIdV").innerHTML = "["+classId+"]"
+  }
+
+  function printMousePos(e){
+
+       var resim = document.getElementById("resim")
+       if(e.target==resim){
+
+         var imagebound = resim.getBoundingClientRect();
+
+         if(sayac ==1) {
+           xmaxs.push((e.pageX-imagebound.x) / resim.width)
+           ymaxs.push((e.pageY-imagebound.y) / resim.height)
+           sayac=0
+         }else {
+           xmins.push((e.pageX-imagebound.x) / resim.width)
+           ymins.push((e.pageY-imagebound.y) / resim.height)
+           className.push(document.getElementById("className").value)
+           classId.push(parseInt(document.getElementById("classId").value))
+           sayac++
+         }
+
+         document.getElementById("xminsV").innerHTML = "["+xmins+"]"
+         document.getElementById("yminsV").innerHTML = "["+ymins+"]"
+         document.getElementById("xmaxsV").innerHTML = "["+xmaxs+"]"
+         document.getElementById("ymaxsV").innerHTML = "["+ymaxs+"]"
+         document.getElementById("classNameV").innerHTML = "["+className+"]"
+         document.getElementById("classIdV").innerHTML = "["+classId+"]"
+      }
+  }
+
+  function classEkle(){
+    className.push(document.getElementById("className").value)
+    classId.push(document.getElementById("classId").value)
+    var select = document.getElementsByTagName("select")
+    select.innetHTML+= "<option id='"+document.getElementById("classId").value+"'>"+document.getElementById("className").value+"</option>"
+
+  }
+
+  function cikart(){
+
+    var filename = document.getElementById("dizin").value
+
+    var cikanobj = {
+      xmins,
+      ymins,
+      xmaxs,
+      ymaxs,
+      className,
+      classId,
+      filename,
+      width: resim.width,
+      height: resim.height
+
+    }
+    alert(JSON.stringify(cikanobj))
+
+  }
+
+  </script>
+
+</body>
+
+</html>
